@@ -26,13 +26,15 @@ img { width:100%; margin-top:10px; }
 </div>
 
 <script>
+// preview code
 document.getElementById("file").addEventListener("change", function(e){
-    const file = e.target.files[0];
+    let file = e.target.files[0];
     if(file){
         document.getElementById("preview").src = URL.createObjectURL(file);
     }
 });
 
+// analyze function
 async function analyze() {
     let fileInput = document.getElementById("file");
     let file = fileInput.files[0];
@@ -53,11 +55,16 @@ async function analyze() {
 
         let data = await res.json();
 
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
         document.getElementById("result").innerText =
             data.skin_type + " (" + data.confidence + ")";
     } catch (err) {
-        alert("Error: backend not responding");
+        alert("Server error");
         console.log(err);
     }
 }
-    
+</script>
