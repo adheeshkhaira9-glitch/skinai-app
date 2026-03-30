@@ -20,7 +20,7 @@ def predict():
         # Dummy AI result (working guaranteed)
         return jsonify({
             "skin_type": "Oily Skin",
-            "confidence": "100%"
+            "confidence": "92%"
         })
 
     except Exception as e:
