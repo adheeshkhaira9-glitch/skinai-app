@@ -15,7 +15,7 @@ img { width:100%; margin-top:10px; }
 <div class="container">
 <h1>🧴 SkinAI</h1>
 
-<input type="file" id="file">
+<input type="file" id="file" accept="image/*">
 <br>
 <img id="preview">
 
@@ -26,7 +26,7 @@ img { width:100%; margin-top:10px; }
 </div>
 
 <script>
-// preview
+// preview image
 document.getElementById("file").addEventListener("change", function(e){
     let file = e.target.files[0];
     if(file){
@@ -34,11 +34,9 @@ document.getElementById("file").addEventListener("change", function(e){
     }
 });
 
-// button click fix
-document.getElementById("analyzeBtn").addEventListener("click", analyze);
+// analyze click
+document.getElementById("analyzeBtn").addEventListener("click", async function() {
 
-// analyze function
-async function analyze() {
     let fileInput = document.getElementById("file");
     let file = fileInput.files[0];
 
@@ -65,9 +63,13 @@ async function analyze() {
 
         document.getElementById("result").innerText =
             data.skin_type + " (" + data.confidence + ")";
+
     } catch (err) {
         alert("Server error");
         console.log(err);
     }
-}
+});
 </script>
+
+</body>
+</html>
