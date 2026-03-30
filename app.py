@@ -17,7 +17,7 @@ def predict():
     try:
         img = Image.open(file)
 
-        # Dummy AI result (working guaranteed)
+        # Dummy AI (stable response)
         return jsonify({
             "skin_type": "Oily Skin",
             "confidence": "92%"
@@ -26,5 +26,6 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)})
 
+# IMPORTANT for Railway
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=8080)
