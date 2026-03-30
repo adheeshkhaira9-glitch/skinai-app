@@ -34,22 +34,30 @@ document.getElementById("file").addEventListener("change", function(e){
 });
 
 async function analyze() {
-    let file = document.getElementById("file").files[0];
+    let fileInput = document.getElementById("file");
+    let file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please upload image first");
+        return;
+    }
 
     let formData = new FormData();
     formData.append("file", file);
 
-    let res = await fetch("/predict", {
-        method: "POST",
-        body: formData
-    });
+    try {
+        let res = await fetch("/predict", {
+            method: "POST",
+            body: formData
+        });
 
-    let data = await res.json();
+        let data = await res.json();
 
-    document.getElementById("result").innerText =
-        data.skin_type + " (" + data.confidence + ")";
+        document.getElementById("result").innerText =
+            data.skin_type + " (" + data.confidence + ")";
+    } catch (err) {
+        alert("Error: backend not responding");
+        console.log(err);
+    }
 }
-</script>
-
-</body>
-</html>
+    
