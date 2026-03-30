@@ -20,19 +20,22 @@ img { width:100%; margin-top:10px; }
 <img id="preview">
 
 <br><br>
-<button onclick="analyze()">Analyze</button>
+<button id="analyzeBtn">Analyze</button>
 
 <h2 id="result"></h2>
 </div>
 
 <script>
-// preview code
+// preview
 document.getElementById("file").addEventListener("change", function(e){
     let file = e.target.files[0];
     if(file){
         document.getElementById("preview").src = URL.createObjectURL(file);
     }
 });
+
+// button click fix
+document.getElementById("analyzeBtn").addEventListener("click", analyze);
 
 // analyze function
 async function analyze() {
