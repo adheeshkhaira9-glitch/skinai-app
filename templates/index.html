@@ -1,139 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>SkinAI Pro</title>
-
+<meta charset="UTF-8">
+<title>SkinAI Analyzer</title>
 <style>
-body {
-    font-family: Arial;
-    background: linear-gradient(135deg,#89f7fe,#66a6ff);
-    text-align: center;
-}
-
-.container {
-    background: white;
-    padding: 25px;
-    margin: 50px auto;
-    width: 320px;
-    border-radius: 15px;
-    box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
-}
-
-button {
-    padding: 10px 20px;
-    border: none;
-    background: #4CAF50;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-img {
-    width: 100%;
-    margin-top: 10px;
-    border-radius: 10px;
-}
-
-.result-box {
-    margin-top: 15px;
-    padding: 12px;
-    background: #f0f0f0;
-    border-radius: 10px;
-}
-
-#result {
-    font-weight: bold;
-    color: #333;
-}
-
-#remedy {
-    margin-top: 8px;
-    color: #555;
-}
+    body {
+        font-family: Arial;
+        background: #f4f4f4;
+        text-align: center;
+        padding: 20px;
+    }
+    .container {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 600px;
+        margin: auto;
+    }
+    img {
+        max-width: 100%;
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+    button {
+        padding: 10px 20px;
+        margin-top: 15px;
+        font-size: 16px;
+        cursor: pointer;
+    }
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
-<h1>🧴 SkinAI Pro</h1>
+    <h1>🧴 SkinAI Analyzer</h1>
+    <p>Upload selfie for skin analysis</p>
 
-<input type="file" id="file" accept="image/*">
-<img id="preview">
+    <input type="file" id="upload" accept="image/*">
+    <br>
+    <img id="preview">
 
-<br><br>
-<button onclick="analyze()">Analyze</button>
+    <br>
+    <button onclick="analyzeSkin()">🚀 Analyze Skin</button>
 
-<div class="result-box">
-    <h3 id="result"></h3>
-    <p id="remedy"></p>
-</div>
-
+    <h2 id="result"></h2>
+    <div id="routine"></div>
+    <div id="tips"></div>
 </div>
 
 <script>
+const SKIN_TYPES = {
+    0: {
+        name: "🛢️ Oily",
+        routine: ["Salicylic Acid cleanser", "Niacinamide serum", "Matte moisturizer"],
+        tips: ["SPF 50 daily", "Oil control sheets"]
+    },
+    1: {
+        name: "🌵 Dry",
+        routine: ["Ceramide cleanser", "Hyaluronic Acid serum", "Rich cream"],
+        tips: ["Humidifier use", "Omega-3 diet"]
+    },
+    2: {
+        name: "⚖️ Combination",
+        routine: ["Gentle foaming cleanser", "Lightweight serum", "Gel moisturizer"],
+        tips: ["T-zone focus", "Layering technique"]
+    },
+    3: {
+        name: "😰 Sensitive",
+        routine: ["Fragrance-free cleanser", "Centella serum", "Barrier cream"],
+        tips: ["Patch test", "Minimal routine"]
+    }
+};
 
-// preview image
-document.getElementById("file").addEventListener("change", function(e){
-    let file = e.target.files[0];
-    if(file){
-        document.getElementById("preview").src = URL.createObjectURL(file);
+let imageElement = document.getElementById("preview");
+
+document.getElementById("upload").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        imageElement.src = URL.createObjectURL(file);
     }
 });
 
-// main analyze function
-async function analyze() {
-
-    let file = document.getElementById("file").files[0];
-
-    if(!file){
-        alert("Upload image first");
+function analyzeSkin() {
+    if (!imageElement.src) {
+        alert("Please upload image first");
         return;
     }
 
-    let formData = new FormData();
-    formData.append("file", file);
+    // Fake analysis (random result like your Python logic demo)
+    let skin_id = Math.floor(Math.random() * 4);
+    let data = SKIN_TYPES[skin_id];
 
-    try{
-        let res = await fetch("/predict", {
-            method: "POST",
-            body: formData
-        });
+    document.getElementById("result").innerText = "Your Skin Type: " + data.name;
 
-        let data = await res.json();
+    let routineHTML = "<h3>Routine</h3>";
+    data.routine.forEach(r => {
+        routineHTML += "• " + r + "<br>";
+    });
 
-        if(data.error){
-            alert(data.error);
-            return;
-        }
+    let tipsHTML = "<h3>Tips</h3>";
+    data.tips.forEach(t => {
+        tipsHTML += "⭐ " + t + "<br>";
+    });
 
-        // show result
-        let resultText = "🧴 Skin Type: " + data.skin_type + " (" + data.confidence + ")";
-        document.getElementById("result").innerText = resultText;
-
-        // remedies
-        let remedy = "";
-
-        if(data.skin_type.includes("Oily")){
-            remedy = "🧴 Neem paste, aloe vera, wash face twice daily.";
-        } 
-        else if(data.skin_type.includes("Dry")){
-            remedy = "💧 Honey, coconut oil, drink water.";
-        } 
-        else if(data.skin_type.includes("Sensitive")){
-            remedy = "🌿 Aloe vera, avoid harsh chemicals.";
-        } 
-        else {
-            remedy = "⚖️ Maintain proper skincare routine.";
-        }
-
-        document.getElementById("remedy").innerText = remedy;
-
-    }catch(err){
-        alert("Server error");
-        console.log(err);
-    }
+    document.getElementById("routine").innerHTML = routineHTML;
+    document.getElementById("tips").innerHTML = tipsHTML;
 }
 </script>
 
